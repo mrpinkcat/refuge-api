@@ -3,14 +3,13 @@ import rjwt from 'restify-jwt-community';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import User from './UserModel';
-
-const secretJwt = '';
+import config from './config';
 
 const server = createServer();
 
 server.use(plugins.queryParser()); // Met tous les params dans l'object res.query
 server.use(plugins.bodyParser());
-server.use(rjwt({ secret: secretJwt }).unless({
+server.use(rjwt({ secret: config.secretJwt }).unless({
   path: ['/auth'],
 }));
 
@@ -24,11 +23,11 @@ server.listen('3001', () => {
   console.log(`${server.name} listen at ${server.url}`);
 });
 
-server.post('/auth', (req, rres, next) => {
+server.post('/auth', (req, rres) => {
   console.log('POST /auth');
   let { username, password } = req.body;
   console.log(username, password)
-  mongoose.connect('', {useNewUrlParser: true}).then(() => {
+  mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.collection}`, {useNewUrlParser: true}).then(() => {
     User.findOne({username, password}, (err, res) => {
       if (res ===  null) {
         rres.send(401)
@@ -41,7 +40,7 @@ server.post('/auth', (req, rres, next) => {
           admin: res.toJSON().admin,
         }
         
-        let token = jwt.sign(payload, secretJwt, { expiresIn: '15m' });
+        let token = jwt.sign(payload, config.secretJwt, { expiresIn: '15m' });
       
         // retrieve issue and expiration times
         //@ts-ignore
