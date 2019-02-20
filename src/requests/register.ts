@@ -20,7 +20,6 @@ const register = (restifyReq: Request) => {
       User.findOne({ username: restifyReq.body.username })
       .then((res) => {
         // Si il est libre 
-        console.log(res)
         if (!res) {
           let encyptedPassword: string;
 
@@ -54,6 +53,7 @@ const register = (restifyReq: Request) => {
           });
         // Si il est déjà pris
         } else {
+          mongoose.disconnect();
           reject('Username already taken');
         }
       });

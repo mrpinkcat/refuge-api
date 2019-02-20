@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import config from './config';
 import request from './requests'
 
-const server = createServer();
+const server = createServer({name: 'refuge-API'});
 
 server.use(plugins.queryParser()); // Met les params dans req.query
 server.use(plugins.bodyParser()); // Met le body dans req.body
@@ -24,6 +24,7 @@ server.listen('3001', () => {
   console.log(`${server.name} listen at ${server.url}`);
 });
 
+// Auth
 server.post('/auth', (restifyReq, restifyRes) => {
   console.log('POST /auth');
 
@@ -41,6 +42,7 @@ server.post('/auth', (restifyReq, restifyRes) => {
   });
 });
 
+// Création d'utilisateur
 server.post('/register', (restifyReq, restifyRes) => {
   console.log('POST /register');
 
@@ -58,6 +60,24 @@ server.post('/register', (restifyReq, restifyRes) => {
 
   // Si fail
   .catch(err => {
-    restifyRes.send(401, err);
+    restifyRes.send(500, err);
   })
 });
+
+// Suppression d'utilisateur 
+server.del('/user/:username', (restifyReq, restifyRes) => {
+  console.log(`DELETE /user/${restifyReq.params.username}`);
+  request.deleteUser(restifyReq)
+
+  .then(() => {
+    restifyRes.send(200, { message: `Succefully deleted ${restifyReq.params.username}` });
+  })
+
+  .catch((err) => {
+    if (err === 401) {
+      restifyRes.send(401, { message: 'You must be admin to perform this action'});
+    } else {
+      restifyRes.send(404, { message: `User ${restifyReq.params.username} not found`});
+    }
+  })
+})
