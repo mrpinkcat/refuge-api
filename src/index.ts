@@ -13,13 +13,6 @@ server.use(rjwt({ secret: config.secretJwt }).unless({
   path: ['/auth', '/register', '/heartbeat'],
 }));
 
-server.get('/', (req, res, next) => {
-  console.log('GET /');
-  // @ts-ignore
-  res.send(200, { body: `Hello ${jwt.decode(req.authorization.credentials).username} !` })
-  next();
-})
-
 server.listen('3001', () => {
   console.log(`${server.name} listen at ${server.url}`);
 });
@@ -84,4 +77,4 @@ server.del('/user/:username', (restifyReq, restifyRes) => {
 
 server.get('/heartbeat', (req, res) => {
   res.send(200);
-})
+});
