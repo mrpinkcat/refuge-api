@@ -2,15 +2,15 @@ import { createServer, plugins } from 'restify';
 import rjwt from 'restify-jwt-community';
 import jwt from 'jsonwebtoken';
 import config from './config';
-import request from './requests'
+import request from './requests';
 
-const server = createServer({name: 'refuge-API'});
+const server = createServer({ name: 'refuge-API' });
 
 server.use(plugins.queryParser()); // Met les params dans req.query
 server.use(plugins.bodyParser()); // Met le body dans req.body
 server.use(plugins.authorizationParser()); // Met le token dans req.authorization.credentials
 server.use(rjwt({ secret: config.secretJwt }).unless({
-  path: ['/auth', '/register'],
+  path: ['/auth', '/register', '/heartbeat'],
 }));
 
 server.get('/', (req, res, next) => {
@@ -79,5 +79,9 @@ server.del('/user/:username', (restifyReq, restifyRes) => {
     } else {
       restifyRes.send(404, { message: `User ${restifyReq.params.username} not found`});
     }
-  })
+  });
+});
+
+server.get('/heartbeat', (req, res) => {
+  res.send(200);
 })
