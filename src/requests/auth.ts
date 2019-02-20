@@ -11,24 +11,30 @@ let auth = (restifyReq: restify.Request, restifyRes: restify.Response) => {
     let { username, password } = restifyReq.body;
     mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.collection}`, {useNewUrlParser: true}).then(() => {
       User.findOne({username, password}, (err, res) => {
-        if (res ===  null || err) {
-          reject();
-          // restifyRes.send(401);
+        if (err) {
+          // Catch
+          reject(err);
+        } else if (res ===  null) {
+          // Catch
+          reject('User or password not match');
         } else {
-    
+          
+          // Création du pyaload
           let payload = {
             username: res.toJSON().username,
             email: res.toJSON().email,
             admin: res.toJSON().admin,
           }
           
+          // Création du token
           let token = jwt.sign(payload, config.secretJwt, { expiresIn: '15m' });
         
+          // @ts-ignore
           // retrieve issue and expiration times
-          //@ts-ignore
           let {iat, exp} = jwt.decode(token);
+
+          // then
           resolve({token, iat, exp});
-          // restifyRes.send(200, {iat, exp, token});
         }
       });
     });
