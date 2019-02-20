@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import User from './UserModel';
 import config from './config';
+import request from './requests'
 
 const server = createServer();
 
@@ -23,30 +24,13 @@ server.listen('3001', () => {
   console.log(`${server.name} listen at ${server.url}`);
 });
 
-server.post('/auth', (req, rres) => {
+server.post('/auth', (restifyReq, restifyRes) => {
   console.log('POST /auth');
-  let { username, password } = req.body;
-  console.log(username, password)
-  mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.collection}`, {useNewUrlParser: true}).then(() => {
-    User.findOne({username, password}, (err, res) => {
-      if (res ===  null) {
-        rres.send(401)
-        console.log(res);
-      } else {
-
-        let payload = {
-          username: res.toJSON().username,
-          email: res.toJSON().email,
-          admin: res.toJSON().admin,
-        }
-        
-        let token = jwt.sign(payload, config.secretJwt, { expiresIn: '15m' });
-      
-        // retrieve issue and expiration times
-        //@ts-ignore
-        let {iat, exp} = jwt.decode(token);
-        rres.send(200, {iat, exp, token});
-      }
-    });
+  request.auth(restifyReq, restifyRes)
+  .then((res) => {
+    restifyRes.send(200, res);
+  })
+  .catch(() => {
+    restifyRes.send(401, { message: 'Username or password is invalid'});
   });
 });
