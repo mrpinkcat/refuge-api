@@ -13,7 +13,7 @@ if (typeof process.env.SECRET_JSON_WEB_TOKEN === 'string' ) {
   process.exit(0);
 }
 
-// Check les info de connexion à la base
+// Check les infos de connexion à la base
 let user: string, pass: string, ip: string, port: number, collection: string;
 if (typeof process.env.MONGO_USER === 'string' && typeof process.env.MONGO_PASS === 'string' && typeof process.env.MONGO_IP === 'string' && typeof process.env.MONGO_PORT === 'string' && typeof process.env.MONGO_COLLECTION === 'string') {
   user = process.env.MONGO_USER;
@@ -31,19 +31,37 @@ if (typeof process.env.MONGO_USER === 'string' && typeof process.env.MONGO_PASS 
   process.exit(0);
 }
 
+// Check les infos de cryptage
+let secretBcript: string, saltRound: number;
+if (typeof process.env.BCRIPT_SECRET === 'string' && typeof process.env.BCRIPT_SALT_ROUNDS === 'string') {
+  secretBcript = process.env.BCRIPT_SECRET;
+  saltRound = parseInt(process.env.BCRIPT_SALT_ROUNDS);
+} else {
+  secretBcript = '';
+  saltRound = 0;
+  process.exit(0);
+}
+
 // Interface de l'export
 interface ConfigRefugeAPI {
   secretJwt: string;
   mongo: MongoConfig;
+  bcript: BcriptConfig;
 }
 
-// Interface des info de connexion à la base
+// Interface des infos de connexion à la base
 interface MongoConfig {
   user: string;
   pass: string;
   ip: string;
   port: number;
   collection: string;
+}
+
+// Interface des infos de cryptage
+interface BcriptConfig {
+  secret: string;
+  saltRound: number;
 }
 
 // Object de l'export
@@ -55,6 +73,10 @@ let configRefugeAPI: ConfigRefugeAPI = {
     ip,
     port,
     collection,
+  },
+  bcript: {
+    secret: secretBcript,
+    saltRound,
   },
 }
 
