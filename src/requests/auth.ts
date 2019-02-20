@@ -3,10 +3,10 @@ import config from './../config';
 import User from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import Promise from 'bluebird';
-import restify from 'restify';
+import { Request } from 'restify';
 import { compare } from 'bcrypt';
 
-let auth = (restifyReq: restify.Request, restifyRes: restify.Response) => {
+let auth = (restifyReq: Request) => {
   // Création d'une promise
   return new Promise((resolve, reject) => {
     let { username, password } = restifyReq.body;
@@ -25,8 +25,9 @@ let auth = (restifyReq: restify.Request, restifyRes: restify.Response) => {
         } else {
 
           // Désencryption du password pour le check avec le user
-          compare(password, res.toJSON().password).then((isValidPassword: boolean) => {
-            console.log(isValidPassword);
+          compare(password, res.toJSON().password)
+          .then((isValidPassword: boolean) => {
+            // Si le password décrypté macth avec le password renseigné par l'utilisateur
             if (isValidPassword) {
               // Création du pyaload
               let payload = {
@@ -45,7 +46,9 @@ let auth = (restifyReq: restify.Request, restifyRes: restify.Response) => {
               mongoose.disconnect();
               // then
               resolve({token, iat, exp});
+            // Si le password décrypté ne macth pas avec le password renseigné par l'utilisateur
             } else {
+              // catch
               reject('Password is incorrect')
             }
           });

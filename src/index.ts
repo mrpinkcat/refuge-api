@@ -28,7 +28,7 @@ server.post('/auth', (restifyReq, restifyRes) => {
   console.log('POST /auth');
 
   // Check is le pass et le username existe dans la base
-  request.auth(restifyReq, restifyRes)
+  request.auth(restifyReq)
 
   // Si il existe
   .then((res) => {
@@ -45,10 +45,14 @@ server.post('/register', (restifyReq, restifyRes) => {
   console.log('POST /register');
 
   // Crée le user dans la base
-  request.register(restifyReq, restifyRes)
+  request.register(restifyReq)
 
   // Si on a bien crée le user dans la base
   .then(res => {
+    // On n'envoie pas le password du user dans la réponse
+    // @ts-ignore
+    delete res.password;
+
     restifyRes.send(200, res);
   })
 

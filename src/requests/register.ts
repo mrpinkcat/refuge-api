@@ -12,7 +12,7 @@ interface UserInfo {
   email: String,
 }
 
-const register = (restifyReq: Request, restifyRes: Response) => {
+const register = (restifyReq: Request) => {
   return new Promise((resolve, reject) => {
     mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.collection}`, {useNewUrlParser: true})
     .then(() => {
@@ -22,7 +22,8 @@ const register = (restifyReq: Request, restifyRes: Response) => {
       hash(restifyReq.body.password, config.bcript.saltRound)
       .then(hash => {
         encyptedPassword = hash;
-
+        
+        // Création de l'objet user
         let userInfo: UserInfo = {
           username: restifyReq.body.username,
           password: encyptedPassword,
@@ -30,21 +31,20 @@ const register = (restifyReq: Request, restifyRes: Response) => {
           admin: false,
         }
         
+        // Création du document User
         let newUser = new User(userInfo);
   
-        newUser.save().then(res => {
+        // Push du User dans la base
+        newUser.save()
+        .then(res => {
           mongoose.disconnect();
-          resolve(res);
+          // Then
+          resolve(res.toJSON());
         }).catch(err => {
           mongoose.disconnect();
+          // Catch
           reject(err);
         });
-      })
-      .catch(err => {
-        console.log(err)!
-        console.log('Error during password encryption')
-        encyptedPassword = '';
-        reject('Error during password encryption')
       });
     });
   });
