@@ -6,9 +6,9 @@ import request from './requests'
 
 const server = createServer();
 
-server.use(plugins.queryParser()); // Met tous les params dans l'object res.query
-server.use(plugins.bodyParser());
-server.use(plugins.authorizationParser());
+server.use(plugins.queryParser()); // Met les params dans req.query
+server.use(plugins.bodyParser()); // Met le body dans req.body
+server.use(plugins.authorizationParser()); // Met le token dans req.authorization.credentials
 server.use(rjwt({ secret: config.secretJwt }).unless({
   path: ['/auth', '/register'],
 }));
@@ -36,8 +36,8 @@ server.post('/auth', (restifyReq, restifyRes) => {
   })
 
   // Si il n'exsite pas
-  .catch(() => {
-    restifyRes.send(401, { message: 'Username or password is invalid'});
+  .catch((err) => {
+    restifyRes.send(401, { message: err });
   });
 });
 
