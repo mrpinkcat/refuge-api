@@ -30,12 +30,12 @@ server.post('/auth', (restifyReq, restifyRes) => {
   // Check is le pass et le username existe dans la base
   request.auth(restifyReq, restifyRes)
 
-  // Si ils existent
+  // Si il existe
   .then((res) => {
     restifyRes.send(200, res);
   })
 
-  // Si ils n'exsitent pas
+  // Si il n'exsite pas
   .catch(() => {
     restifyRes.send(401, { message: 'Username or password is invalid'});
   });
