@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import config from './../config';
-import User from './../UserModel';
+import User from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import Promise from 'bluebird';
 import restify from 'restify'
