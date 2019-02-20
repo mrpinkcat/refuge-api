@@ -12,7 +12,7 @@ const deleteUser = (restifyReq: Request) => {
     if (!jwt.decode(restifyReq.authorization.credentials).admin) {
       reject(401);
     } else {
-      mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.collection}`, {useNewUrlParser: true})
+      mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.database}`, {useNewUrlParser: true})
       .then(() => {
         User.deleteOne({ username: restifyReq.params.username })
         .then(res => {

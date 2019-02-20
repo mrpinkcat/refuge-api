@@ -14,7 +14,7 @@ interface UserInfo {
 
 const register = (restifyReq: Request) => {
   return new Promise((resolve, reject) => {
-    mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.collection}`, {useNewUrlParser: true})
+    mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.database}`, {useNewUrlParser: true})
     .then(() => {
       // Check si le username est déjà pris
       User.findOne({ username: restifyReq.body.username })

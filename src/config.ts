@@ -14,20 +14,20 @@ if (typeof process.env.SECRET_JSON_WEB_TOKEN === 'string' ) {
 }
 
 // Check les infos de connexion à la base
-let user: string, pass: string, ip: string, port: number, collection: string;
-if (typeof process.env.MONGO_USER === 'string' && typeof process.env.MONGO_PASS === 'string' && typeof process.env.MONGO_IP === 'string' && typeof process.env.MONGO_PORT === 'string' && typeof process.env.MONGO_COLLECTION === 'string') {
+let user: string, pass: string, ip: string, port: number, database: string;
+if (typeof process.env.MONGO_USER === 'string' && typeof process.env.MONGO_PASS === 'string' && typeof process.env.MONGO_IP === 'string' && typeof process.env.MONGO_PORT === 'string' && typeof process.env.MONGO_DB === 'string') {
   user = process.env.MONGO_USER;
   pass = process.env.MONGO_PASS;
   ip = process.env.MONGO_IP;
   port = parseInt(process.env.MONGO_PORT);
-  collection = process.env.MONGO_COLLECTION;
+  database = process.env.MONGO_DB;
 } else {
   console.log('ERROR: Missing mongodb info !');
   user = '';
   pass = '';
   ip = '';
   port = 0;
-  collection = '';
+  database = '';
   process.exit(0);
 }
 
@@ -55,7 +55,7 @@ interface MongoConfig {
   pass: string;
   ip: string;
   port: number;
-  collection: string;
+  database: string;
 }
 
 // Interface des infos de cryptage
@@ -72,7 +72,7 @@ let configRefugeAPI: ConfigRefugeAPI = {
     pass,
     ip,
     port,
-    collection,
+    database,
   },
   bcript: {
     secret: secretBcript,

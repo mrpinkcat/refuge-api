@@ -11,7 +11,7 @@ let auth = (restifyReq: Request) => {
   return new Promise((resolve, reject) => {
     let { username, password } = restifyReq.body;
     
-    mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.collection}`, {useNewUrlParser: true})
+    mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.database}`, {useNewUrlParser: true})
     .then(() => {
       User.findOne({username}, (err, res) => {
         if (err) {
