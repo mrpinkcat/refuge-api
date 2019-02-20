@@ -10,7 +10,7 @@ server.use(plugins.queryParser()); // Met tous les params dans l'object res.quer
 server.use(plugins.bodyParser());
 server.use(plugins.authorizationParser());
 server.use(rjwt({ secret: config.secretJwt }).unless({
-  path: ['/auth'],
+  path: ['/auth', '/register'],
 }));
 
 server.get('/', (req, res, next) => {
@@ -43,4 +43,17 @@ server.post('/auth', (restifyReq, restifyRes) => {
 
 server.post('/register', (restifyReq, restifyRes) => {
   console.log('POST /register');
-})
+
+  // Crée le user dans la base
+  request.register(restifyReq, restifyRes)
+
+  // Si on a bien crée le user dans la base
+  .then(res => {
+    restifyRes.send(200, res);
+  })
+
+  // Si fail
+  .catch(err => {
+    restifyRes.send(401, err);
+  })
+});

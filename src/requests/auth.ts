@@ -12,9 +12,11 @@ let auth = (restifyReq: restify.Request, restifyRes: restify.Response) => {
     mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.collection}`, {useNewUrlParser: true}).then(() => {
       User.findOne({username, password}, (err, res) => {
         if (err) {
+          mongoose.disconnect();
           // Catch
           reject(err);
         } else if (res ===  null) {
+          mongoose.disconnect();
           // Catch
           reject('User or password not match');
         } else {
@@ -33,6 +35,7 @@ let auth = (restifyReq: restify.Request, restifyRes: restify.Response) => {
           // retrieve issue and expiration times
           let {iat, exp} = jwt.decode(token);
 
+          mongoose.disconnect();
           // then
           resolve({token, iat, exp});
         }
