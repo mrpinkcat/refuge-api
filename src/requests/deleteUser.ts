@@ -14,7 +14,7 @@ const deleteUser = (restifyReq: Request) => {
     } else {
       mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.database}`, {useNewUrlParser: true})
       .then(() => {
-        User.deleteOne({ username: restifyReq.params.username })
+        User.deleteOne({ email: restifyReq.params.email })
         .then(res => {
           if (res.n === 1) {
             mongoose.disconnect();

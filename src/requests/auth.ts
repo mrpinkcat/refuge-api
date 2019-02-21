@@ -9,11 +9,11 @@ import { compare } from 'bcrypt';
 let auth = (restifyReq: Request) => {
   // Création d'une promise
   return new Promise((resolve, reject) => {
-    let { username, password } = restifyReq.body;
+    let { email, password } = restifyReq.body;
     
     mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.database}`, {useNewUrlParser: true})
     .then(() => {
-      User.findOne({username}, (err, res) => {
+      User.findOne({email}, (err, res) => {
         if (err) {
           mongoose.disconnect();
           // Catch
@@ -31,16 +31,18 @@ let auth = (restifyReq: Request) => {
             if (isValidPassword) {
               // Création du pyaload
               let payload = {
-                username: res.toJSON().username,
                 email: res.toJSON().email,
+                firstname: res.toJSON().firstname,
+                lastname: res.toJSON().lastname,
+                phone: res.toJSON().phone,
                 admin: res.toJSON().admin,
               }
               
               // Création du token
-              let token = jwt.sign(payload, config.secretJwt, { expiresIn: '15m' });
+              let token = jwt.sign(payload, config.secretJwt, { expiresIn: '1h' });
             
               // @ts-ignore
-              // retrieve issue and expiration times
+              // Récupére les heures d'émission et d'expiration
               let {iat, exp} = jwt.decode(token);
 
               mongoose.disconnect();

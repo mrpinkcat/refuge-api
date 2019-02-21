@@ -1,8 +1,11 @@
 import { createServer, plugins } from 'restify';
 import rjwt from 'restify-jwt-community';
-import jwt from 'jsonwebtoken';
 import config from './config';
 import request from './requests';
+
+// Pour éviter le deprecation warning
+import { set } from 'mongoose';
+set('useCreateIndex', true); 
 
 const server = createServer({ name: 'refuge-API' });
 
@@ -57,20 +60,30 @@ server.post('/register', (restifyReq, restifyRes) => {
   })
 });
 
+server.get('/users', (req, res) => {
+  console.log('GET /users');
+  // Récupérer tout les users
+})
+
+server.get('/user/:email', (req, res) => {
+  console.log(`GET /user/${req.params.email}`);
+  // Récupérer l'info d'un user
+});
+
 // Suppression d'utilisateur 
-server.del('/user/:username', (restifyReq, restifyRes) => {
-  console.log(`DELETE /user/${restifyReq.params.username}`);
+server.del('/user/:email', (restifyReq, restifyRes) => {
+  console.log(`DELETE /user/${restifyReq.params.email}`);
   request.deleteUser(restifyReq)
 
   .then(() => {
-    restifyRes.send(200, { message: `Succefully deleted ${restifyReq.params.username}` });
+    restifyRes.send(200, { message: `Succefully deleted ${restifyReq.params.email}` });
   })
 
   .catch((err) => {
     if (err === 401) {
       restifyRes.send(401, { message: 'You must be admin to perform this action'});
     } else {
-      restifyRes.send(404, { message: `User ${restifyReq.params.username} not found`});
+      restifyRes.send(404, { message: `User ${restifyReq.params.email} not found`});
     }
   });
 });
