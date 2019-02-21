@@ -88,6 +88,12 @@ server.del('/user/:email', (restifyReq, restifyRes) => {
   });
 });
 
+// Endpoint pour voir si le serveur est up (ouvert sans token)
 server.get('/heartbeat', (req, res) => {
+  res.send(200, req.connection.remoteAddress);
+});
+
+// Endpoint pour check le token
+server.get('/tokencheck', (req, res) => {
   res.send(200);
 });
