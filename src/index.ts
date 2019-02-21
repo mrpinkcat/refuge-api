@@ -4,7 +4,7 @@ import config from './config';
 import request from './requests';
 
 // Pour éviter le deprecation warning
-import { set } from 'mongoose';
+import { set, connect } from 'mongoose';
 set('useCreateIndex', true); 
 
 const server = createServer({ name: 'refuge-API' });
@@ -16,9 +16,16 @@ server.use(rjwt({ secret: config.secretJwt }).unless({
   path: ['/auth', '/register', '/heartbeat'],
 }));
 
-server.listen('3001', () => {
-  console.log(`${server.name} listen at ${server.url}`);
-});
+connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.database}`, {useNewUrlParser: true})
+.then(() => {
+  server.listen('3001', () => {
+    console.log(`${server.name} listen at ${server.url}`);
+  });
+})
+.catch((err) => {
+  console.log(err);
+  process.exit(0);
+})
 
 // Auth
 server.post('/auth', (restifyReq, restifyRes) => {

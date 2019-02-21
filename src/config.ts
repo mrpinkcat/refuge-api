@@ -32,12 +32,11 @@ if (typeof process.env.MONGO_USER === 'string' && typeof process.env.MONGO_PASS 
 }
 
 // Check les infos de cryptage
-let secretBcript: string, saltRound: number;
-if (typeof process.env.BCRIPT_SECRET === 'string' && typeof process.env.BCRIPT_SALT_ROUNDS === 'string') {
-  secretBcript = process.env.BCRIPT_SECRET;
-  saltRound = parseInt(process.env.BCRIPT_SALT_ROUNDS);
+let saltRound: number;
+if (typeof process.env.BCRYPT_SALT_ROUNDS === 'string') {
+  saltRound = parseInt(process.env.BCRYPT_SALT_ROUNDS);
 } else {
-  secretBcript = '';
+  console.log('ERROR: Missing bcrypt info !');
   saltRound = 0;
   process.exit(0);
 }
@@ -46,7 +45,7 @@ if (typeof process.env.BCRIPT_SECRET === 'string' && typeof process.env.BCRIPT_S
 interface ConfigRefugeAPI {
   secretJwt: string;
   mongo: MongoConfig;
-  bcript: BcriptConfig;
+  bcrypt: BcryptConfig;
 }
 
 // Interface des infos de connexion à la base
@@ -59,8 +58,7 @@ interface MongoConfig {
 }
 
 // Interface des infos de cryptage
-interface BcriptConfig {
-  secret: string;
+interface BcryptConfig {
   saltRound: number;
 }
 
@@ -74,8 +72,7 @@ let configRefugeAPI: ConfigRefugeAPI = {
     port,
     database,
   },
-  bcript: {
-    secret: secretBcript,
+  bcrypt: {
     saltRound,
   },
 }

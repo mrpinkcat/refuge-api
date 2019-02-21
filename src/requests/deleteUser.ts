@@ -1,5 +1,3 @@
-import mongoose from 'mongoose';
-import config from './../config';
 import User from '../models/UserModel';
 import Promise from 'bluebird';
 import jwt from 'jsonwebtoken';
@@ -12,18 +10,13 @@ const deleteUser = (restifyReq: Request) => {
     if (!jwt.decode(restifyReq.authorization.credentials).admin) {
       reject(401);
     } else {
-      mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.database}`, {useNewUrlParser: true})
-      .then(() => {
-        User.deleteOne({ email: restifyReq.params.email })
-        .then(res => {
-          if (res.n === 1) {
-            mongoose.disconnect();
-            resolve(res);
-          } else {
-            mongoose.disconnect();
-            reject(404);
-          }
-        });
+      User.deleteOne({ email: restifyReq.params.email })
+      .then(res => {
+        if (res.n === 1) {
+          resolve(res);
+        } else {
+          reject(404);
+        }
       });
     }
   });
