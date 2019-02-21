@@ -16,6 +16,7 @@ server.use(rjwt({ secret: config.secretJwt }).unless({
   path: ['/auth', '/register', '/heartbeat'],
 }));
 
+// Connection à la base
 connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:${config.mongo.port}/${config.mongo.database}`, {useNewUrlParser: true})
 .then(() => {
   server.listen('3001', () => {
