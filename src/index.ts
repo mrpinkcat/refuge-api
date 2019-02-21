@@ -29,22 +29,7 @@ connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:
 })
 
 // Auth
-server.post('/auth', (restifyReq, restifyRes) => {
-  console.log('POST /auth');
-
-  // Check is le pass et le username existe dans la base
-  request.auth(restifyReq)
-
-  // Si il existe
-  .then((res) => {
-    restifyRes.send(200, res);
-  })
-
-  // Si il n'exsite pas
-  .catch((err) => {
-    restifyRes.send(401, { message: err });
-  });
-});
+server.post('/auth', request.auth);
 
 // Création d'utilisateur
 server.post('/register', (restifyReq, restifyRes) => {
@@ -98,7 +83,7 @@ server.del('/user/:email', (restifyReq, restifyRes) => {
 
 // Endpoint pour voir si le serveur est up (ouvert sans token)
 server.get('/heartbeat', (req, res) => {
-  res.send(200, req.connection.remoteAddress);
+  res.send(200);
 });
 
 // Endpoint pour check le token
