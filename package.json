@@ -6,7 +6,6 @@
   "dependencies": {
     "bcrypt": "^3.0.4",
     "bluebird": "^3.5.3",
-    "consola": "^2.4.1",
     "dotenv": "^6.2.0",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.13",
