@@ -45,22 +45,7 @@ server.get('/user/:email', (req, res) => {
 });
 
 // Suppression d'utilisateur 
-server.del('/user/:email', (restifyReq, restifyRes) => {
-  console.log(`DELETE /user/${restifyReq.params.email}`);
-  request.deleteUser(restifyReq)
-
-  .then(() => {
-    restifyRes.send(200, { message: `Succefully deleted ${restifyReq.params.email}` });
-  })
-
-  .catch((err) => {
-    if (err === 401) {
-      restifyRes.send(401, { message: 'You must be admin to perform this action'});
-    } else {
-      restifyRes.send(404, { message: `User ${restifyReq.params.email} not found`});
-    }
-  });
-});
+server.del('/user/:email', request.deleteUser);
 
 // Endpoint pour voir si le serveur est up (ouvert sans token)
 server.get('/heartbeat', (req, res) => {
