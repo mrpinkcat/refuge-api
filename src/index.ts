@@ -34,25 +34,21 @@ server.post('/auth', request.auth);
 // Création d'utilisateur
 server.post('/register', request.register);
 
-server.get('/users', (req, res) => {
-  console.log('GET /users');
-  // Récupérer tout les users
-})
-
-server.get('/user/:email', (req, res) => {
-  console.log(`GET /user/${req.params.email}`);
-  // Récupérer l'info d'un user
-});
-
 // Suppression d'utilisateur 
 server.del('/user/:email', request.deleteUser);
 
 // Endpoint pour voir si le serveur est up (ouvert sans token)
-server.get('/heartbeat', (req, res) => {
-  res.send(200);
-});
+server.get('/heartbeat', request.heartbeat);
 
 // Endpoint pour check le token
-server.get('/tokencheck', (req, res) => {
-  res.send(200);
-});
+server.get('/tokencheck', request.tokenCheck);
+
+// server.get('/users', (req, res) => {
+//   console.log('GET /users');
+//   // Récupérer tout les users
+// })
+
+// server.get('/user/:email', (req, res) => {
+//   console.log(`GET /user/${req.params.email}`);
+//   // Récupérer l'info d'un user
+// });
