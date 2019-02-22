@@ -2,9 +2,9 @@ import { createServer, plugins } from 'restify';
 import rjwt from 'restify-jwt-community';
 import config from './config';
 import request from './requests';
+import { set, connect } from 'mongoose';
 
 // Pour éviter le deprecation warning
-import { set, connect } from 'mongoose';
 set('useCreateIndex', true); 
 
 const server = createServer({ name: 'refuge-API' });
@@ -32,26 +32,7 @@ connect(`mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.ip}:
 server.post('/auth', request.auth);
 
 // Création d'utilisateur
-server.post('/register', (restifyReq, restifyRes) => {
-  console.log('POST /register');
-
-  // Crée le user dans la base
-  request.register(restifyReq)
-
-  // Si on a bien crée le user dans la base
-  .then(res => {
-    // On n'envoie pas le password du user dans la réponse
-    // @ts-ignore
-    delete res.password;
-
-    restifyRes.send(200, res);
-  })
-
-  // Si fail
-  .catch(err => {
-    restifyRes.send(500, err);
-  })
-});
+server.post('/register', request.register);
 
 server.get('/users', (req, res) => {
   console.log('GET /users');
