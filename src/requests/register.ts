@@ -13,6 +13,7 @@ interface UserInfo {
 }
 
 const register = (restifyReq: Request, restifyRes: Response) => {
+  console.log(`POST /register`);
   // Check la force du mot de passe
   if (!restifyReq.body.password.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/g)) {
     let err = {

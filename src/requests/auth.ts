@@ -5,6 +5,7 @@ import { Request, Response } from 'restify';
 import { compare } from 'bcrypt';
 
 let auth = (restifyReq: Request, restifyRes: Response) => {
+  console.log('POST /auth')
   let { email, password } = restifyReq.body;
 
   User.findOne({email})
