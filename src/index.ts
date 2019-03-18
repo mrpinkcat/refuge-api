@@ -4,6 +4,12 @@ import config from './config';
 import request from './requests';
 import { set, connect } from 'mongoose';
 
+// Pour éviter le UnhandledPromiseRejectionWarning
+process.on('unhandledRejection', (err, p) => {
+  console.log('An unhandledRejection occurred');
+});
+
+
 // Pour éviter le deprecation warning
 set('useCreateIndex', true); 
 

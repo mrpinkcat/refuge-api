@@ -1,4 +1,22 @@
 import { Schema, model } from 'mongoose';
+import config from './../config';
+import { hash } from 'bcrypt';
+
+// pour metre le un text en full minuscule (pour éviter les doublons d'email par exemple)
+const toLower = (text: string): string => {
+  return text.toLocaleLowerCase();
+}
+
+const hashPassword = (pass: string): Promise<string> => (
+  hash(pass, config.bcrypt.saltRound)
+  .then(hash => {
+    return hash
+  })
+  .catch(err => {
+    process.exit(1);
+    return '';
+  })
+)
 
 let UserShema = new Schema({
   email: { 
@@ -9,10 +27,16 @@ let UserShema = new Schema({
       message: 'Email is invalid',
     },
     unique: true,
+    set: toLower,
   },
   password: { 
     required: true,
     type: String,
+    validate: {
+      validator: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/g,
+      message: 'Password must contain a minimum of eight characters, at least one letter and one number',
+    },
+    write: hashPassword,
   },
   firstname: { 
     required: true,
@@ -35,7 +59,9 @@ let UserShema = new Schema({
     type: Boolean,
     default: false,
   },
-})
+});
+
+UserShema.plugin(require('mongoose-async'))
 
 let User = model('User', UserShema);
 

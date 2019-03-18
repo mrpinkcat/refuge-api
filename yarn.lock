@@ -506,6 +506,11 @@ is-fullwidth-code-point@^2.0.0:
   resolved "https://registry.yarnpkg.com/is-fullwidth-code-point/-/is-fullwidth-code-point-2.0.0.tgz#a3b30a5c4f199183167aaab93beefae3ddfb654f"
   integrity sha1-o7MKXE8ZkYMWeqq5O+764937ZU8=
 
+is-promise@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/is-promise/-/is-promise-2.1.0.tgz#79a2a9ece7f096e80f36d2b2f3bc16c1ff4bf3fa"
+  integrity sha1-eaKp7OfwlugPNtKy87wWwf9L8/o=
+
 isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
@@ -698,6 +703,13 @@ mongodb@3.1.13:
   dependencies:
     mongodb-core "3.1.11"
     safe-buffer "^5.1.2"
+
+mongoose-async@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/mongoose-async/-/mongoose-async-1.0.1.tgz#b410431f5919944dfee12dbf2631243a6e414298"
+  integrity sha512-en/BC+I/COLE7Pm6vUWQj2Nrm3Wg/vwrLBqSSONGWqXrfeyEikEEY/EYRI2LP19exI5PwKMqr6/q02ZK9Sn+Fg==
+  dependencies:
+    is-promise "^2.1.0"
 
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
